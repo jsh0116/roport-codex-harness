@@ -89,33 +89,54 @@ OMX 제어·AI 추론·시스템 아키텍처 관점에서 확인하되, 이번�
 
 ## 에이전트 역할
 
+각 항목 끝에 기본 모델과 추론 강도를 표시했습니다. Luna는 `gpt-6-luna`, Sol은 `gpt-6.1-sol`입니다.
+
 ### 전문 역할 15개
 
-- `roport_system_architect`: 요구사항·시나리오·시스템 구조와 모듈 간 계약
-- `roport_pinky_navigation_engineer`: Pinky 주행·도킹·ROS 2·안전 정지
-- `roport_omx_control_engineer`: OMX 양팔 제어·관절/action·LeRobot 정책 실행
-- `roport_robot_perception_engineer`: 고객 추적·QR/마커·영상 좌표·관측 유효성
-- `roport_imitation_learning_engineer`: 시연·데이터셋·ACT 학습/평가·모델 인계
-- `roport_control_integration_engineer`: 상태 전달·WSS/MQTT·중복 명령·실패/복구
-- `roport_fleet_planning_engineer`: 작업/슬롯 배정·공유 자원·공용 통로·대피·스케줄
-- `roport_ai_inference_engineer`: 모델 입출력·전처리·추론 유효성·UDP/MQTT
-- `roport_service_backend_engineer`: Java/Spring 주문·예약·고객 검증·수령 처리
-- `roport_web_engineer`: 고객/직원/관리자 웹·API 상태·권한별 표시·접근성
-- `roport_hmi_engineer`: Qt 패드·LCD/LED/부저·고객 입력·탑승 알림
-- `roport_hardware_integration_engineer`: 장비·포트·전원·설치 좌표·캘리브레이션 근거
-- `roport_robot_validation_engineer`: 데이터 재생·시뮬레이션·로봇 통합 실패 검증
-- `roport_platform_engineer`: CI·환경/배포 준비·운영 로그·네트워크 검증
-- `roport_security_reviewer`: 인증·개인정보·명령 신뢰/안전 경계의 독립 리뷰
+- `roport_system_architect`: 요구사항·시나리오·시스템 구조와 모듈 간 계약 **(Sol High)**
+- `roport_pinky_navigation_engineer`: Pinky 주행·도킹·ROS 2·안전 정지 **(Sol High)**
+- `roport_omx_control_engineer`: OMX 양팔 제어·관절/action·LeRobot 정책 실행 **(Sol High)**
+- `roport_robot_perception_engineer`: 고객 추적·QR/마커·영상 좌표·관측 유효성 **(Sol High)**
+- `roport_imitation_learning_engineer`: 시연·데이터셋·ACT 학습/평가·모델 인계 **(Sol High)**
+- `roport_control_integration_engineer`: 상태 전달·WSS/MQTT·중복 명령·실패/복구 **(Sol High)**
+- `roport_fleet_planning_engineer`: 작업/슬롯 배정·공유 자원·공용 통로·대피·스케줄 **(Sol High)**
+- `roport_ai_inference_engineer`: 모델 입출력·전처리·추론 유효성·UDP/MQTT **(Sol High)**
+- `roport_service_backend_engineer`: Java/Spring 주문·예약·고객 검증·수령 처리 **(Sol Medium)**
+- `roport_web_engineer`: 고객/직원/관리자 웹·API 상태·권한별 표시·접근성 **(Sol Medium)**
+- `roport_hmi_engineer`: Qt 패드·LCD/LED/부저·고객 입력·탑승 알림 **(Sol Medium)**
+- `roport_hardware_integration_engineer`: 장비·포트·전원·설치 좌표·캘리브레이션 근거 **(Sol High)**
+- `roport_robot_validation_engineer`: 데이터 재생·시뮬레이션·로봇 통합 실패 검증 **(Sol High)**
+- `roport_platform_engineer`: CI·환경/배포 준비·운영 로그·네트워크 검증 **(Sol Medium)**
+- `roport_security_reviewer`: 인증·개인정보·명령 신뢰/안전 경계의 독립 리뷰 **(Sol High)**
 
 ### 공통 작업 역할 5개
 
-- `harness_explorer`: 관련 코드와 실제 호출 흐름을 읽고 근거를 찾습니다.
-- `harness_architect`: 작업 범위·파일 소유권·의존성과 완료 기준을 정리합니다.
-- `harness_worker`: 전문 분야를 따로 나눌 필요가 없는 구현을 맡습니다.
-- `harness_reviewer`: 변경 내용을 독립적으로 검토하고 결함을 보고합니다.
-- `harness_qa`: 허용된 검사를 실행하고 실패를 재현합니다.
+- `harness_explorer`: 관련 코드와 실제 호출 흐름을 읽고 근거를 찾습니다. **(Luna High)**
+- `harness_architect`: 작업 범위·파일 소유권·의존성과 완료 기준을 정리합니다. **(Sol High)**
+- `harness_worker`: 전문 분야를 따로 나눌 필요가 없는 구현을 맡습니다. **(Sol Medium)**
+- `harness_reviewer`: 변경 내용을 독립적으로 검토하고 결함을 보고합니다. **(Sol High)**
+- `harness_qa`: 허용된 검사를 실행하고 실패를 재현합니다. **(Sol Medium)**
 
 메인 채팅이 최종 계약과 통합을 결정합니다. 구현 담당자와 독립 리뷰·QA 담당자의 책임을 구분하고, 같은 파일을 여러 작성자에게 동시에 맡기지 않습니다.
+
+## 모델 선택과 작업별 조정
+
+탐색은 Luna High, 범위가 정해진 구현·검사는 Sol Medium, 설계·로봇 제어·독립 리뷰는 Sol High를 기본으로 정했습니다.
+모든 역할에 모델과 추론 강도를 함께 지정하므로, 메인 채팅의 모델을 바꿔도 역할별 설정은 유지합니다. 메인 모델과 전역 설정은 설치기가 바꾸지 않습니다.
+이 구성은 초기 기준이며, 프로젝트 작업으로 모델별 품질·속도를 비교한 결과는 아닙니다.
+
+예를 들어 Pinky 역할은 다음 값을 사용합니다.
+
+```toml
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
+```
+
+역할 TOML의 명시값은 호출 시 지정보다 우선합니다. 이번 작업만 다른 모델이나 추론 강도로 처리하려면 메인 채팅에 변경을 요청합니다.
+메인은 모델 선택을 지원하는 기본 역할에 원래 역할의 지시와 제한을 전달해 별도 실행하고, 대체 실행과 실제 확인한 모델을 보고합니다. 반복할 변경이면 개인 하네스의 역할 TOML을 수정하고 제품 설치본에 동기화합니다.
+계정·클라이언트에서 모델을 제공하지 않으면 대체 모델과 이유를 알립니다. 자세한 기준은 [모델 선택과 예외 처리](.agents/skills/roport-orchestrator/references/engineering-roles.md#모델-선택과-예외-처리)를 따릅니다.
+
+기준 문서: [OpenAI 모델 안내](https://learn.chatgpt.com/docs/models), [subagents 설정](https://learn.chatgpt.com/docs/agent-configuration/subagents).
 
 ## 제품 검사
 

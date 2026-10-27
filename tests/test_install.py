@@ -71,12 +71,13 @@ class InstallTests(unittest.TestCase):
         self.assertEqual(len(names), len(set(names)))
         self.assertEqual(set(name for name in names if name.startswith('roport_')), expected)
         for path, data in zip(agents, definitions):
-            if data['name'] not in expected:
-                continue
             self.assertTrue(data['developer_instructions'].strip())
-            self.assertNotIn('model', data)
+            self.assertIn(data['model'], {'gpt-6-luna', 'gpt-6.1-sol'})
+            self.assertIn(data['model_reasoning_effort'], {'medium', 'high'})
+            self.assertEqual(path.read_bytes(), (ROOT / path.relative_to(self.project)).read_bytes())
             self.assertNotIn('approval_policy', data)
-            self.assertNotIn('sandbox_mode', data)
+            if data['name'] in expected:
+                self.assertNotIn('sandbox_mode', data)
             self.git('check-ignore', str(path.relative_to(self.project)))
         self.assertTrue((self.project / '.agents/skills/roport-orchestrator/references/engineering-roles.md').is_file())
 
@@ -89,6 +90,18 @@ class InstallTests(unittest.TestCase):
         self.assertEqual(conflict.read_text(), 'user edits\n')
         self.assertFalse((self.project / '.codex').exists())
         self.assertFalse((self.project / '.agents/skills/harness').exists())
+
+    def test_personalized_role_model_is_preserved_on_reinstall_conflict(self):
+        installer.install(self.project)
+        path = self.project / '.codex/agents/roport_pinky_navigation_engineer.toml'
+        customized = path.read_text().replace('model = "gpt-6.1-sol"', 'model = "my-task-model"')
+        path.write_text(customized)
+        before = {p: p.read_bytes() for base in ('.codex', '.agents')
+                  for p in (self.project / base).rglob('*') if p.is_file()}
+        with self.assertRaisesRegex(ValueError, 'Conflicting'):
+            installer.install(self.project)
+        self.assertEqual(path.read_text(), customized)
+        self.assertEqual({p: p.read_bytes() for p in before}, before)
 
     def test_tracked_files_are_never_taken_over(self):
         path = self.project / '.codex/agents/harness-worker.toml'
