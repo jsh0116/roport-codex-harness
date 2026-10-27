@@ -13,3 +13,5 @@ archive/upstream. This migration is not an OpenAI product or endorsement.
 Modified 2026-10-27 by jsh0116: extracted the RO:PORT-specific Codex harness
 into a private personal repository; added local-only installation, explicit
 application-root verification runner, project profile, tests and CI.
+Extended 2026-10-27: fifteen RO:PORT specialist role definitions and explicit
+domain routing, retaining the five upstream workflow roles.

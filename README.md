@@ -6,7 +6,7 @@ Claude Code 하네스는 이 저장소의 범위에 포함하지 않습니다.
 
 ## 구성
 
-- `.codex/agents/`: 탐색·설계·구현·리뷰·QA 기본 역할 5개
+- `.codex/agents/`: 기본 작업 역할 5개와 분야별 전문 역할 15개
 - `.agents/skills/harness/`: 실행 장부·협업 기록·입력 변경 감지·부분 재실행 도구
 - `.agents/skills/roport-orchestrator/`: RO:PORT 모듈·계약·안전·검증 절차
 - `scripts/install.py`: 제품의 추적 파일을 바꾸지 않는 개인 설치기
@@ -25,7 +25,7 @@ python3 scripts/install.py --target /absolute/path/to/kernel-robot-repo-1 --dry-
 python3 scripts/install.py --target /absolute/path/to/kernel-robot-repo-1
 ```
 
-설치기는 두 스킬·5개 역할과 필요한 프로젝트 Codex 기본 설정을 설치합니다.
+설치기는 두 스킬·20개 역할과 필요한 프로젝트 Codex 기본 설정을 설치합니다.
 개인 파일과 실행 로그는 대상의 `.git/info/exclude`로 로컬에서만 제외합니다.
 팀의 `AGENTS.md`, README, package.json, `.gitignore`, 서비스 코드와 CI는 수정하지 않습니다.
 기존 모델·권한 설정을 보존하며 충돌 파일이나 수정이 필요한 추적 설정은 덮어쓰지 않고 실패합니다.
@@ -39,6 +39,33 @@ $roport-orchestrator 관련 Tech Spec과 기존 코드를 확인하고 P0 기능
 
 RO:PORT 코드 작업은 **제품 프로젝트에서 시작한 채팅**에서 수행합니다. 이 하네스 checkout에서 시작한 자식은 제품 프로젝트로 자동 이동하지 않습니다.
 하네스 자체를 수정·점검할 때는 `$harness`를 사용합니다. 역할 파일 생성은 현재 채팅의 custom role 발견·권한 격리·실행 성공을 보장하지 않습니다.
+
+## 분야별 전문 엔지니어
+
+- `roport_system_architect`: 요구사항·시나리오·시스템 구조와 모듈 계약
+- `roport_pinky_navigation_engineer`: Pinky 주행·도킹·ROS 2·안전 정지
+- `roport_omx_control_engineer`: OMX 양팔 제어·관절/action·LeRobot 실행 경계
+- `roport_robot_perception_engineer`: 고객 추적·QR/마커·영상/좌표·관측 유효성
+- `roport_imitation_learning_engineer`: 시연·데이터셋·ACT 학습/평가·모델 인계
+- `roport_control_integration_engineer`: 상태·WSS/MQTT·중복·실패/복구
+- `roport_fleet_planning_engineer`: 작업/슬롯·자원·공용 통로/대피·스케줄
+- `roport_ai_inference_engineer`: 모델 입출력·영상/관측·추론 유효성·UDP/MQTT
+- `roport_service_backend_engineer`: Java/Spring 주문·예약·고객 검증·수령 처리
+- `roport_web_engineer`: 고객/직원/관리자 웹과 API 상태·권한·접근성
+- `roport_hmi_engineer`: Qt 패드·LCD/LED/부저·고객 입력·탑승 알림
+- `roport_hardware_integration_engineer`: 장비·포트·전원·좌표/설치·보정 근거
+- `roport_robot_validation_engineer`: replay·시뮬레이션·로봇 통합 실패 검증
+- `roport_platform_engineer`: CI·환경/배포 준비·운영 관측·네트워크 검증
+- `roport_security_reviewer`: 인증/개인정보·명령 신뢰/안전 경계의 독립 리뷰
+
+부모 오케스트레이터가 요청에 맞는 전문 역할을 선택하고 파일 소유권·공통 계약을 조율합니다.
+기존 탐색·설계·리뷰·QA 역할은 공통 절차로 재사용합니다. 역할 20개를 모두 동시에 실행하지 않으며 기본 동시 자식 한도는 3개입니다.
+분야 간 인계·작업 예시는 [전문 역할 배정 안내](.agents/skills/roport-orchestrator/references/engineering-roles.md)를 확인합니다.
+
+```text
+$roport-orchestrator Pinky 도킹 중 연결이 끊겼을 때 정지 처리와 관제 상태 전달을 구현해줘.
+Pinky 주행 엔지니어와 관제 연동 엔지니어로 나누고 mock으로 검증해줘.
+```
 
 ## 제품 검사
 

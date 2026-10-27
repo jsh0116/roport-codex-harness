@@ -18,8 +18,11 @@ description: "RO:PORT 로봇 서비스의 여러 모듈에 걸친 기능 구현�
 
 ## 역할과 경계
 
-기존 `.codex/agents/harness-*.toml`의 5개 역할을 재사용한다. 모듈마다 같은 역할을 복제하지 않는다.
-탐색은 `harness_explorer`, 경계 설계는 `harness_architect`, 구현은 `harness_worker`, 독립 검토는 `harness_reviewer`, 검사는 `harness_qa`에 배정한다. 필요한 역할만 실행한다.
+[전문 엔지니어 배정](references/engineering-roles.md)을 읽고 구현 분야에 맞는 `.codex/agents/roport_*.toml` 역할을 선택한다.
+설계, Pinky, OMX, 인지, 모방학습, 관제, fleet planning, AI, 서비스, 웹, HMI, 하드웨어, 로봇 검증, 플랫폼, 보안의 전문 역할 15개가 있다.
+탐색은 `harness_explorer`, 경계 설계는 `harness_architect`, 독립 검토는 `harness_reviewer`, 검사는 `harness_qa`를 재사용한다.
+분야가 특정되지 않는 작은 구현에는 `harness_worker`를 사용할 수 있다. 전문 엔지니어와 같은 파일을 중복 배정하지 않는다. 필요한 역할만 실행한다.
+요구사항·명세 간 책임이 다르면 시스템 아키텍트로 적용 범위를 확인하고 부모가 공통 계약을 정한다. 일반 QA와 로봇 통합 검증, 일반 코드 리뷰와 보안 리뷰를 같은 파일 수정자로 동시에 배정하지 않는다.
 
 부모가 계획·공유 schema·lockfile·설정·최종 통합을 소유한다. 워커에게는 경로가 겹치지 않는 파일 소유권을 준다. 생산자와 소비자가 같은 계약에 의존하면 계약을 먼저 확정하고 독립 구현을 병렬화한다.
 부모가 위임할 때 이 스킬과 관련 하위 `AGENTS.md` 경로를 작업 패킷에 넣는다. 제품 수정은 워커가, 재현·검증은 QA가 맡는다. 자식은 추가 위임 없이 분할 필요를 부모에게 알린다.

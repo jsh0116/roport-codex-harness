@@ -2,6 +2,7 @@ import importlib.util
 from pathlib import Path
 import subprocess
 import tempfile
+import tomllib
 import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,6 +45,40 @@ class InstallTests(unittest.TestCase):
     def test_second_install_is_noop(self):
         installer.install(self.project)
         self.assertEqual(installer.install(self.project), [])
+
+    def test_specialists_install_with_unique_names_and_local_exclusions(self):
+        installer.install(self.project)
+        expected = {
+            'roport_system_architect',
+            'roport_pinky_navigation_engineer',
+            'roport_omx_control_engineer',
+            'roport_robot_perception_engineer',
+            'roport_imitation_learning_engineer',
+            'roport_control_integration_engineer',
+            'roport_fleet_planning_engineer',
+            'roport_ai_inference_engineer',
+            'roport_service_backend_engineer',
+            'roport_web_engineer',
+            'roport_hmi_engineer',
+            'roport_hardware_integration_engineer',
+            'roport_robot_validation_engineer',
+            'roport_platform_engineer',
+            'roport_security_reviewer',
+        }
+        agents = list((self.project / '.codex/agents').glob('*.toml'))
+        definitions = [tomllib.loads(p.read_text()) for p in agents]
+        names = [data['name'] for data in definitions]
+        self.assertEqual(len(names), len(set(names)))
+        self.assertEqual(set(name for name in names if name.startswith('roport_')), expected)
+        for path, data in zip(agents, definitions):
+            if data['name'] not in expected:
+                continue
+            self.assertTrue(data['developer_instructions'].strip())
+            self.assertNotIn('model', data)
+            self.assertNotIn('approval_policy', data)
+            self.assertNotIn('sandbox_mode', data)
+            self.git('check-ignore', str(path.relative_to(self.project)))
+        self.assertTrue((self.project / '.agents/skills/roport-orchestrator/references/engineering-roles.md').is_file())
 
     def test_conflict_is_rejected_before_other_writes(self):
         conflict = self.project / '.agents/skills/roport-orchestrator/SKILL.md'
